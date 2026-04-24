@@ -266,16 +266,84 @@
             transition: left 0.3s ease;
             z-index: -1;
         }
-
+        
         .nav-links a:hover::before {
             left: 0;
         }
-
+        
         .nav-links a:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-
+        
+        /* Language Switcher */
+        .lang-switcher {
+            position: relative;
+        }
+        
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .lang-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .lang-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            min-width: 120px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            z-index: 1002;
+        }
+        
+        .lang-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .lang-option {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .lang-option:hover {
+            background: #f5f5f5;
+        }
+        
+        .lang-option.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
         /* Mobile Menu Toggle */
         .menu-toggle {
             display: none;
@@ -285,7 +353,7 @@
             padding: 10px;
             z-index: 1001;
         }
-
+        
         .menu-toggle span {
             width: 25px;
             height: 3px;
@@ -350,6 +418,37 @@
                 font-size: 18px;
                 padding: 12px 20px;
                 text-align: center;
+            }
+
+            .lang-switcher {
+                width: 100%;
+            }
+
+            .lang-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .lang-dropdown {
+                position: static;
+                margin-top: 10px;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                display: none;
+            }
+
+            .lang-dropdown.active {
+                display: block;
+            }
+
+            .lang-option {
+                padding: 15px 20px;
+                font-size: 16px;
+                justify-content: center;
             }
 
             .logo-text {
@@ -647,11 +746,382 @@
             <span></span>
         </div>
         <ul class="nav-links" id="navLinks">
-            <li><a href="#" onclick="openContactModal()">Контакты</a></li>
+            <li><a href="#" onclick="openContactModal()" data-translate="contacts">Контакты</a></li>
+            <li class="lang-switcher">
+                <button class="lang-btn" onclick="toggleLangDropdown()">
+                    <span id="currentLang">RU</span>
+                    <span>▼</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <div class="lang-option" data-lang="ru" onclick="changeLanguage('ru')">🇷🇺 Русский</div>
+                    <div class="lang-option" data-lang="en" onclick="changeLanguage('en')">🇬🇧 English</div>
+                    <div class="lang-option" data-lang="hy" onclick="changeLanguage('hy')">🇦🇲 Հայերեն</div>
+                </div>
+            </li>
         </ul>
     </nav>
 
+<fieldset>
+    <legend><label>Уровень образования</label></legend>
+    <div class="form-group">
+        <select name="education-level" id="education-level" onchange="toggleInput(this, 'education-level-custom')">
+            <option value="">Выберите уровень</option>
+            <option value="среднее">Среднее</option>
+            <option value="среднее-специальное">Среднее специальное</option>
+            <option value="высшее">Высшее</option>
+            <option value="учусь">Учусь</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="education-level-custom" class="custom-input" placeholder="Введите уровень образования">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Учебное заведение</label></legend>
+    <div class="form-group">
+        <select name="institution" id="institution" onchange="toggleInput(this, 'institution-custom')">
+            <option value="">Где учились</option>
+            <option value="университет">университет</option>
+            <option value="колледж">колледж</option>
+            <option value="техникум">техникум</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="institution-custom" class="custom-input" placeholder="Введите учебное заведение">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Место работы</label></legend>
+    <div class="form-group">
+        <select name="workplace" id="workplace" onchange="toggleInput(this, 'workplace-custom')">
+            <option value="">Где работаете</option>
+            <option value="институт">в институте</option>
+            <option value="колледж">в колледже</option>
+            <option value="техникум">в техникуме</option>
+            <option value="школа">в школе</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="workplace-custom" class="custom-input" placeholder="Введите место работы">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Предмет</label></legend>
+    <div class="form-group">
+        <select name="subject" id="subject" onchange="toggleInput(this, 'subject-custom')">
+            <option value="">Выберите предмет</option>
+            <option value="математика">математика / алгебра</option>
+            <option value="русский">русский язык</option>
+            <option value="немецкий">немецкий язык</option>
+            <option value="французский">французский язык</option>
+            <option value="английский">английский язык</option>
+            <option value="физика">физика</option>
+            <option value="история">история</option>
+            <option value="химия">химия</option>
+            <option value="биология">биология</option>
+            <option value="информатика">информатика</option>
+            <option value="обж">ОБЖ</option>
+            <option value="труд">труд</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="subject-custom" class="custom-input" placeholder="Введите предмет">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Стаж работы</label></legend>
+    <div class="form-group">
+        <select name="experience" id="experience" onchange="toggleInput(this, 'experience-custom')">
+            <option value="">Выберите стаж</option>
+            <option value="1-2">1 - 2 года</option>
+            <option value="3-5">3 - 5 лет</option>
+            <option value="5+">5 и выше</option>
+            <option value="нет">нет стажа работы</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="experience-custom" class="custom-input" placeholder="Введите стаж работы">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Классы </label></legend>
+    <div class="form-group">
+        <select name="classes" id="classes" onchange="toggleInput(this, 'classes-custom')">
+            <option value="">Для каких классов</option>
+            <option value="начальный">начальный класс</option>
+            <option value="2-4">2 - 4 класс</option>
+            <option value="5-9">5 - 9 класс</option>
+            <option value="10-11">10 - 11 класс</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="classes-custom" class="custom-input" placeholder="Введите класс">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Должность</label></legend>
+    <div class="form-group">
+        <select name="position" id="position" onchange="toggleInput(this, 'position-custom')">
+            <option value="">Выберите должность</option>
+            <option value="директор">директор</option>
+            <option value="зам-директор">зам. директор</option>
+            <option value="завуч">завуч</option>
+            <option value="учитель">учитель</option>
+            <option value="учительница">учительница</option>
+            <option value="психолог">психолог</option>
+            <option value="другое">другое</option>
+        </select>
+        <input type="text" id="position-custom" class="custom-input" placeholder="Введите должность">
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend><label>Дополнительная информация</label></legend>
+    <div class="form-group">
+        <textarea name="additional-info" id="additional-info" placeholder="Введите дополнительную информацию о себе "></textarea>
+    </div>
+</fieldset>
+
+
+    <!-- Contact Modal -->
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Связаться с нами</h2>
+                <button class="modal-close" onclick="closeContactModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="contact-buttons">
+                    <button class="contact-btn whatsapp" onclick="selectContact('whatsapp')">
+                        WhatsApp
+                    </button>
+                    <button class="contact-btn telegram" onclick="selectContact('telegram')">
+                        Telegram
+                    </button>
+                </div>
+
+                <!-- WhatsApp Form -->
+                <form class="chat-form" id="whatsappForm" onsubmit="event.preventDefault(); sendMessage('whatsapp');">
+                    <div class="form-field">
+                        <label>Имя</label>
+                        <input type="text" name="whatsappName" placeholder="Введите имя" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Фамилия</label>
+                        <input type="text" name="whatsappSurname" placeholder="Введите фамилию" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" name="whatsappEmail" placeholder="example@email.com" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Номер телефона</label>
+                        <input type="tel" name="whatsappPhone" placeholder="+7 (999) 999-99-99" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Сообщение</label>
+                        <textarea name="whatsappMessage" placeholder="Введите ваше сообщение..." required></textarea>
+                    </div>
+                    <button type="submit" class="send-btn">Отправить в WhatsApp</button>
+                </form>
+
+                <!-- Telegram Form -->
+                <form class="chat-form" id="telegramForm" onsubmit="event.preventDefault(); sendMessage('telegram');">
+                    <div class="form-field">
+                        <label>Имя</label>
+                        <input type="text" name="telegramName" placeholder="Введите имя" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Фамилия</label>
+                        <input type="text" name="telegramSurname" placeholder="Введите фамилию" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Email</label>
+                        <input type="email" name="telegramEmail" placeholder="example@email.com" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Номер телефона</label>
+                        <input type="tel" name="telegramPhone" placeholder="+7 (999) 999-99-99" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Сообщение</label>
+                        <textarea name="telegramMessage" placeholder="Введите ваше сообщение..." required></textarea>
+                    </div>
+                    <button type="submit" class="send-btn">Отправить в Telegram</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script>
+        function toggleInput(select, inputId) {
+            const input = document.getElementById(inputId);
+            if (select.value === 'другое') {
+                input.classList.add('active');
+            } else {
+                input.classList.remove('active');
+            }
+        }
+
+        // Language Translations
+        const translations = {
+            ru: {
+                contacts: 'Контакты', logoText: 'Педагоги', educationLevel: 'Уровень образования',
+                selectLevel: 'Выберите уровень', secondary: 'Среднее', secondaryVocational: 'Среднее специальное',
+                higher: 'Высшее', studying: 'Учусь', other: 'другое', enterLevel: 'Введите уровень образования',
+                institution: 'Учебное заведение', whereStudied: 'Где учились', university: 'университет',
+                college: 'колледж', technicalSchool: 'техникум', enterInstitution: 'Введите учебное заведение',
+                workplace: 'Место работы', whereWork: 'Где работаете', atUniversity: 'в институте',
+                atCollege: 'в колледже', atTechnicalSchool: 'в техникуме', atSchool: 'в школе',
+                enterWorkplace: 'Введите место работы', subject: 'Предмет', selectSubject: 'Выберите предмет',
+                math: 'математика / алгебра', russian: 'русский язык', german: 'немецкий язык',
+                french: 'французский язык', english: 'английский язык', physics: 'физика',
+                history: 'история', chemistry: 'химия', biology: 'биология', computerScience: 'информатика',
+                safety: 'ОБЖ', labor: 'труд', enterSubject: 'Введите предмет',
+                experience: 'Стаж работы', selectExperience: 'Выберите стаж', exp1_2: '1 - 2 года',
+                exp3_5: '3 - 5 лет', exp5plus: '5 и выше', noExperience: 'нет стажа работы',
+                enterExperience: 'Введите стаж работы', classes: 'Классы', selectClasses: 'Для каких классов',
+                elementary: 'начальный класс', class2_4: '2 - 4 класс', class5_9: '5 - 9 класс',
+                class10_11: '10 - 11 класс', enterClass: 'Введите класс', position: 'Должность',
+                selectPosition: 'Выберите должность', director: 'директор', deputyDirector: 'зам. директор',
+                vicePrincipal: 'завуч', teacher: 'учитель', teacherFemale: 'учительница',
+                psychologist: 'психолог', enterPosition: 'Введите должность',
+                additionalInfo: 'Дополнительная информация', enterAdditionalInfo: 'Введите дополнительную информацию о себе',
+                contactUs: 'Связаться с нами', yourName: 'Имя', surname: 'Фамилия', email: 'Email',
+                phone: 'Номер телефона', message: 'Сообщение', enterName: 'Введите имя',
+                enterSurname: 'Введите фамилию', enterEmail: 'example@email.com', enterPhone: '+7 (999) 999-99-99',
+                enterMessage: 'Введите ваше сообщение...', sendToWhatsapp: 'Отправить в WhatsApp',
+                sendToTelegram: 'Отправить в Telegram', fillAllFields: 'Пожалуйста, заполните все поля!',
+                messageReady: 'Сообщение готово к отправке!', alertFiltered: 'Обнаружен спам! Текст отфильтрован.'
+            },
+            en: {
+                contacts: 'Contacts', logoText: 'Teachers', educationLevel: 'Education Level',
+                selectLevel: 'Select level', secondary: 'Secondary', secondaryVocational: 'Secondary vocational',
+                higher: 'Higher', studying: 'Currently studying', other: 'other', enterLevel: 'Enter education level',
+                institution: 'Institution', whereStudied: 'Where did you study', university: 'university',
+                college: 'college', technicalSchool: 'technical school', enterInstitution: 'Enter institution name',
+                workplace: 'Workplace', whereWork: 'Where do you work', atUniversity: 'at university',
+                atCollege: 'at college', atTechnicalSchool: 'at technical school', atSchool: 'at school',
+                enterWorkplace: 'Enter workplace', subject: 'Subject', selectSubject: 'Select subject',
+                math: 'mathematics / algebra', russian: 'Russian language', german: 'German language',
+                french: 'French language', english: 'English language', physics: 'physics',
+                history: 'history', chemistry: 'chemistry', biology: 'biology', computerScience: 'computer science',
+                safety: 'safety basics', labor: 'labor', enterSubject: 'Enter subject',
+                experience: 'Work Experience', selectExperience: 'Select experience', exp1_2: '1 - 2 years',
+                exp3_5: '3 - 5 years', exp5plus: '5+ years', noExperience: 'no work experience',
+                enterExperience: 'Enter work experience', classes: 'Classes', selectClasses: 'For which classes',
+                elementary: 'elementary', class2_4: 'grades 2-4', class5_9: 'grades 5-9',
+                class10_11: 'grades 10-11', enterClass: 'Enter grade', position: 'Position',
+                selectPosition: 'Select position', director: 'director', deputyDirector: 'deputy director',
+                vicePrincipal: 'vice principal', teacher: 'teacher', teacherFemale: 'teacher',
+                psychologist: 'psychologist', enterPosition: 'Enter position',
+                additionalInfo: 'Additional Information', enterAdditionalInfo: 'Enter additional information about yourself',
+                contactUs: 'Contact Us', yourName: 'First Name', surname: 'Last Name', email: 'Email',
+                phone: 'Phone Number', message: 'Message', enterName: 'Enter first name',
+                enterSurname: 'Enter last name', enterEmail: 'example@email.com', enterPhone: '+1 (999) 999-99-99',
+                enterMessage: 'Enter your message...', sendToWhatsapp: 'Send to WhatsApp',
+                sendToTelegram: 'Send to Telegram', fillAllFields: 'Please fill in all fields!',
+                messageReady: 'Message is ready to send!', alertFiltered: 'Spam detected! Text filtered.'
+            },
+            hy: {
+                contacts: 'Կոնտակտներ', logoText: 'Ուսուցիչներ', educationLevel: 'Կրթության մակարդակ',
+                selectLevel: 'Ընտրեք մակարդակը', secondary: 'Միջնակարգ', secondaryVocational: 'Միջնակարգ մասնագիտական',
+                higher: 'Ավագ', studying: 'Սովորում եմ', other: 'այլ', enterLevel: 'Մուտքագրեք կրթության մակարդակը',
+                institution: 'Ուսումնական հաստատություն', whereStudied: 'Որտեղ եք սովորել', university: 'համալսարան',
+                college: 'քոլեջ', technicalSchool: 'տեխնիկում', enterInstitution: 'Մուտքագրեք հաստատության անունը',
+                workplace: 'Աշխատավայր', whereWork: 'Որտեղ եք աշխատում', atUniversity: 'համալսարանում',
+                atCollege: 'քոլեջում', atTechnicalSchool: 'տեխնիկումում', atSchool: 'դպրոցում',
+                enterWorkplace: 'Մուտքագրեք աշխատավայրը', subject: 'Առարկա', selectSubject: 'Ընտրեք առարկան',
+                math: 'մաթեմատիկա / ալջեբրա', russian: 'ռուսերեն լեզու', german: 'գերմաներեն լեզու',
+                french: 'ֆրանսերեն լեզու', english: 'անգլերեն լեզու', physics: 'ֆիզիկա',
+                history: 'պատմություն', chemistry: 'քիմիա', biology: 'բիոլոգիա', computerScience: 'ինֆորմատիկա',
+                safety: 'ԱՊՊ', labor: 'աշխատանք', enterSubject: 'Մուտքագրեք առարկան',
+                experience: 'Աշխատանքային փորձ', selectExperience: 'Ընտրեք փորձը', exp1_2: '1 - 2 տարի',
+                exp3_5: '3 - 5 տարի', exp5plus: '5 և ավելի', noExperience: 'փորձ չկա',
+                enterExperience: 'Մուտքագրեք աշխատանքային փորձը', classes: 'Դասարաններ', selectClasses: 'Որ դասարանների համար',
+                elementary: 'սկզբնական դասարան', class2_4: '2 - 4 դասարան', class5_9: '5 - 9 դասարան',
+                class10_11: '10 - 11 դասարան', enterClass: 'Մուտքագրեք դասարանը', position: 'Պաշտոն',
+                selectPosition: 'Ընտրեք պաշտոնը', director: 'տնօրեն', deputyDirector: 'տնօրենի տեղակալ',
+                vicePrincipal: 'ուղեկցող', teacher: 'ուսուցիչ', teacherFemale: 'ուսուցչուհի',
+                psychologist: 'հոգեբան', enterPosition: 'Մուտքագրեք պաշտոնը',
+                additionalInfo: 'Լրացուցիչ տեղեկություն', enterAdditionalInfo: 'Մուտքագրեք լրացուցիչ տեղեկություն ձեր մասին',
+                contactUs: 'Կապ մեզ հետ', yourName: 'Անուն', surname: 'Ազգանուն', email: 'Email',
+                phone: 'Հեռախոսահամար', message: 'Հաղորդագրություն', enterName: 'Մուտքագրեք անունը',
+                enterSurname: 'Մուտքագրեք ազգանունը', enterEmail: 'example@email.com', enterPhone: '+374 (99) 999-999',
+                enterMessage: 'Մուտքագրեք ձեր հաղորդագրությունը...', sendToWhatsapp: 'Ուղարկել WhatsApp',
+                sendToTelegram: 'Ուղարկել Telegram', fillAllFields: 'Խնդրում ենք լրացնել բոլոր դաշտերը!',
+                messageReady: 'Հաղորդագրությունը պատրաստ է ուղարկման!', alertFiltered: 'Սպամ է հայտնաբերվել! Տեքստը ֆիլտրված է:'
+            }
+        };
+
+        let currentLanguage = localStorage.getItem('language') || 'ru';
+
+        function toggleLangDropdown() {
+            document.getElementById('langDropdown').classList.toggle('active');
+        }
+
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            applyLanguage();
+            document.getElementById('langDropdown').classList.remove('active');
+            updateCurrentLangDisplay();
+        }
+
+        function applyLanguage() {
+            const t = translations[currentLanguage];
+            if (!t) return;
+            document.querySelectorAll('[data-translate]').forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (t[key]) el.textContent = t[key];
+            });
+            document.querySelectorAll('[data-translate-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-translate-placeholder');
+                if (t[key]) el.placeholder = t[key];
+            });
+            const selects = {
+                'education-level': ['selectLevel', 'secondary', 'secondaryVocational', 'higher', 'studying', 'other'],
+                'institution': ['whereStudied', 'university', 'college', 'technicalSchool', 'other'],
+                'workplace': ['whereWork', 'atUniversity', 'atCollege', 'atTechnicalSchool', 'atSchool', 'other'],
+                'subject': ['selectSubject', 'math', 'russian', 'german', 'french', 'english', 'physics', 'history', 'chemistry', 'biology', 'computerScience', 'safety', 'labor', 'other'],
+                'experience': ['selectExperience', 'exp1_2', 'exp3_5', 'exp5plus', 'noExperience', 'other'],
+                'classes': ['selectClasses', 'elementary', 'class2_4', 'class5_9', 'class10_11', 'other'],
+                'position': ['selectPosition', 'director', 'deputyDirector', 'vicePrincipal', 'teacher', 'teacherFemale', 'psychologist', 'other']
+            };
+            for (const [selectId, keys] of Object.entries(selects)) {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.querySelectorAll('option').forEach((option, index) => {
+                        if (keys[index] && t[keys[index]]) option.textContent = t[keys[index]];
+                    });
+                }
+            }
+            if (t.logoText) {
+                document.querySelector('.logo-text').textContent = t.logoText;
+                document.title = t.logoText + ' - Survey';
+            }
+            document.documentElement.lang = currentLanguage;
+        }
+
+        function updateCurrentLangDisplay() {
+            document.getElementById('currentLang').textContent = currentLanguage.toUpperCase();
+            document.querySelectorAll('.lang-option').forEach(option => {
+                option.classList.toggle('active', option.getAttribute('data-lang') === currentLanguage);
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.lang-switcher')) {
+                document.getElementById('langDropdown').classList.remove('active');
+            }
+        });
+
+        // Apply saved language on load
+        document.addEventListener('DOMContentLoaded', function() {
+            applyLanguage();
+            updateCurrentLangDisplay();
+        });
+
         // Spam Protection
         (function() {
             // Block right-click on images
@@ -787,206 +1257,5 @@
             lastTouchEnd = now;
         }, false);
     </script>
-
-<fieldset>
-    <legend><label>Уровень образования</label></legend>
-    <div class="form-group">
-        <select name="education-level" id="education-level" onchange="toggleInput(this, 'education-level-custom')">
-            <option value="">Выберите уровень</option>
-            <option value="среднее">Среднее</option>
-            <option value="среднее-специальное">Среднее специальное</option>
-            <option value="высшее">Высшее</option>
-            <option value="учусь">Учусь</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="education-level-custom" class="custom-input" placeholder="Введите уровень образования">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Учебное заведение</label></legend>
-    <div class="form-group">
-        <select name="institution" id="institution" onchange="toggleInput(this, 'institution-custom')">
-            <option value="">Где учились</option>
-            <option value="университет">университет</option>
-            <option value="колледж">колледж</option>
-            <option value="техникум">техникум</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="institution-custom" class="custom-input" placeholder="Введите учебное заведение">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Место работы</label></legend>
-    <div class="form-group">
-        <select name="workplace" id="workplace" onchange="toggleInput(this, 'workplace-custom')">
-            <option value="">Где работаете</option>
-            <option value="институт">в институте</option>
-            <option value="колледж">в колледже</option>
-            <option value="техникум">в техникуме</option>
-            <option value="школа">в школе</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="workplace-custom" class="custom-input" placeholder="Введите место работы">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Предмет</label></legend>
-    <div class="form-group">
-        <select name="subject" id="subject" onchange="toggleInput(this, 'subject-custom')">
-            <option value="">Выберите предмет</option>
-            <option value="математика">математика / алгебра</option>
-            <option value="русский">русский язык</option>
-            <option value="немецкий">немецкий язык</option>
-            <option value="французский">французский язык</option>
-            <option value="английский">английский язык</option>
-            <option value="физика">физика</option>
-            <option value="история">история</option>
-            <option value="химия">химия</option>
-            <option value="биология">биология</option>
-            <option value="информатика">информатика</option>
-            <option value="обж">ОБЖ</option>
-            <option value="труд">труд</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="subject-custom" class="custom-input" placeholder="Введите предмет">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Стаж работы</label></legend>
-    <div class="form-group">
-        <select name="experience" id="experience" onchange="toggleInput(this, 'experience-custom')">
-            <option value="">Выберите стаж</option>
-            <option value="1-2">1 - 2 года</option>
-            <option value="3-5">3 - 5 лет</option>
-            <option value="5+">5 и выше</option>
-            <option value="нет">нет стажа работы</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="experience-custom" class="custom-input" placeholder="Введите стаж работы">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Классы </label></legend>
-    <div class="form-group">
-        <select name="classes" id="classes" onchange="toggleInput(this, 'classes-custom')">
-            <option value="">Для каких классов</option>
-            <option value="начальный">начальный класс</option>
-            <option value="2-4">2 - 4 класс</option>
-            <option value="5-9">5 - 9 класс</option>
-            <option value="10-11">10 - 11 класс</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="classes-custom" class="custom-input" placeholder="Введите класс">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Должность</label></legend>
-    <div class="form-group">
-        <select name="position" id="position" onchange="toggleInput(this, 'position-custom')">
-            <option value="">Выберите должность</option>
-            <option value="директор">директор</option>
-            <option value="зам-директор">зам. директор</option>
-            <option value="завуч">завуч</option>
-            <option value="учитель">учитель</option>
-            <option value="учительница">учительница</option>
-            <option value="психолог">психолог</option>
-            <option value="другое">другое</option>
-        </select>
-        <input type="text" id="position-custom" class="custom-input" placeholder="Введите должность">
-    </div>
-</fieldset>
-
-<fieldset>
-    <legend><label>Дополнительная информация</label></legend>
-    <div class="form-group">
-        <textarea name="additional-info" id="additional-info" placeholder="Введите дополнительную информацию о себе "></textarea>
-    </div>
-</fieldset>
-    <script>
-        function toggleInput(select, inputId) {
-            const input = document.getElementById(inputId);
-            if (select.value === 'другое') {
-                input.classList.add('active');
-            } else {
-                input.classList.remove('active');
-            }
-        }
-    </script>
-
-    <!-- Contact Modal -->
-    <div class="modal-overlay" id="contactModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Связаться с нами</h2>
-                <button class="modal-close" onclick="closeContactModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="contact-buttons">
-                    <button class="contact-btn whatsapp" onclick="selectContact('whatsapp')">
-                        WhatsApp
-                    </button>
-                    <button class="contact-btn telegram" onclick="selectContact('telegram')">
-                        Telegram
-                    </button>
-                </div>
-
-                <!-- WhatsApp Form -->
-                <form class="chat-form" id="whatsappForm" onsubmit="event.preventDefault(); sendMessage('whatsapp');">
-                    <div class="form-field">
-                        <label>Имя</label>
-                        <input type="text" name="whatsappName" placeholder="Введите имя" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Фамилия</label>
-                        <input type="text" name="whatsappSurname" placeholder="Введите фамилию" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Email</label>
-                        <input type="email" name="whatsappEmail" placeholder="example@email.com" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Номер телефона</label>
-                        <input type="tel" name="whatsappPhone" placeholder="+7 (999) 999-99-99" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Сообщение</label>
-                        <textarea name="whatsappMessage" placeholder="Введите ваше сообщение..." required></textarea>
-                    </div>
-                    <button type="submit" class="send-btn">Отправить в WhatsApp</button>
-                </form>
-
-                <!-- Telegram Form -->
-                <form class="chat-form" id="telegramForm" onsubmit="event.preventDefault(); sendMessage('telegram');">
-                    <div class="form-field">
-                        <label>Имя</label>
-                        <input type="text" name="telegramName" placeholder="Введите имя" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Фамилия</label>
-                        <input type="text" name="telegramSurname" placeholder="Введите фамилию" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Email</label>
-                        <input type="email" name="telegramEmail" placeholder="example@email.com" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Номер телефона</label>
-                        <input type="tel" name="telegramPhone" placeholder="+7 (999) 999-99-99" required>
-                    </div>
-                    <div class="form-field">
-                        <label>Сообщение</label>
-                        <textarea name="telegramMessage" placeholder="Введите ваше сообщение..." required></textarea>
-                    </div>
-                    <button type="submit" class="send-btn">Отправить в Telegram</button>
-                </form>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
